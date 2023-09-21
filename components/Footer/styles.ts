@@ -6,10 +6,11 @@ export const ContentWrapper = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: ${({ theme }) => theme.spaces[100]};
+  padding: ${({ theme }) => theme.spaces[200]};
 `
 
 export const FooterText = styled.span`
   color: ${({ theme }) => theme.colors.lightestColor};
   font-size: ${({ theme }) => theme.typo[200]};
+  text-align: center;
 `

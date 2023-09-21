@@ -7,6 +7,7 @@ export const light = {
     darkestColor: '#000000',
     lightGray: '#D5D5D5',
     darkGray: '#747474',
+    darkestGray: '#1D1D1D',
     blue: '#0FA4E4',
     dangerRed: '#DF8686',
   },
