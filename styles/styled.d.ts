@@ -17,6 +17,7 @@ declare module 'styled-components' {
     spaces: {
       50: string
       100: string
+      150: string
       200: string
       300: string
       400: string

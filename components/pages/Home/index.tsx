@@ -1,3 +1,9 @@
+import { PokeballButton } from '../../PokeballButton'
+
 export const Home = () => {
-  return <>Home</>
+  return (
+    <div>
+      <PokeballButton />
+    </div>
+  )
 }
