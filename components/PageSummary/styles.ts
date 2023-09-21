@@ -25,7 +25,7 @@ export const MapSeparator = styled.span`
   margin: ${({ theme }) => `0 ${theme.spaces[50]}`};
 `
 
-export const Title = styled.h2`
+export const Title = styled.h1`
   font-size: ${({ theme }) => theme.typo[700]};
   font-weight: 700;
   color: ${({ theme }) => theme.colors.lightestColor};

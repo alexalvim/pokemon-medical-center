@@ -7,12 +7,12 @@ import {
   Title,
 } from './styles'
 
-interface PageSumaryProps {
+interface PageSummaryProps {
   title: string
   subtitle: string
 }
 
-export const PageSummary = ({ title, subtitle }: PageSumaryProps) => {
+export const PageSummary = ({ title, subtitle }: PageSummaryProps) => {
   return (
     <ContentWrapper>
       <ContentHolder>
