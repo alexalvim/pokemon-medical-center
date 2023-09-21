@@ -12,6 +12,7 @@ export const Button = styled.button<{ $isExpanded: boolean }>`
   transition: all 0.5s;
   width: 61px;
   height: 61px;
+  overflow: hidden;
 
   &:hover {
     width: 254px;

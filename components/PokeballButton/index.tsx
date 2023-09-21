@@ -2,9 +2,11 @@ import { Button, ButtonLabel } from './styles'
 import whitePokeball from '../../public/images/white-pokeball.svg'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export const PokeballButton = () => {
   const [isExpanded, setIsExpanded] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -17,7 +19,12 @@ export const PokeballButton = () => {
   }, [])
 
   return (
-    <Button $isExpanded={isExpanded}>
+    <Button
+      $isExpanded={isExpanded}
+      onClick={() => {
+        router.push('/')
+      }}
+    >
       <Image
         width={37}
         height={34}

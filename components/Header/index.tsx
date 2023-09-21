@@ -8,7 +8,7 @@ export const Header = () => {
       <ContentHolder>
         <PokeballButton />
         <div>
-          <HeaderLink href={'/'}>Quem somos</HeaderLink>
+          <HeaderLink href={'/about-us'}>Quem somos</HeaderLink>
           <Button
             onClick={() => {
               console.log('clicked')

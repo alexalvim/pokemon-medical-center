@@ -10,7 +10,7 @@ export const ContentHolder = styled.section`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1150px;
+  max-width: 71.875rem;
   margin: 0 auto;
 `
 
