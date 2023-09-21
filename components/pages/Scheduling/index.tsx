@@ -10,6 +10,7 @@ import checkIcon from '../../../public/check.svg'
 import warningIcon from '../../../public/warning.svg'
 import { PageSummary } from '../../PageSummary'
 import { InputField } from '../../InputField'
+import { SelectField } from '../../SelectField'
 
 type PageStatus = 'waiting' | 'success' | 'error'
 
@@ -26,6 +27,7 @@ export const Scheduling = () => {
         {pageStatus === 'waiting' ? (
           <FormWrapper>
             <InputField />
+            <SelectField />
           </FormWrapper>
         ) : (
           <ResponseWrapper>
