@@ -6,6 +6,7 @@ import { light } from '../styles/themes/light'
 import { Inter } from '@next/font/google'
 import { AppWrapper, MainSection } from '../components/pages/App/styles'
 import { Footer } from '../components/Footer'
+import { Header } from '../components/Header'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <GlobalStyles />
       <ThemeProvider theme={light}>
         <AppWrapper className={inter.className}>
+          <Header />
           <MainSection>
             <Component {...pageProps} />
           </MainSection>
