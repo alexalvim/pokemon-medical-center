@@ -3,9 +3,13 @@ import styled from 'styled-components'
 export const ContentWrapper = styled.label`
   display: flex;
   flex-direction: column;
+
+  input {
+    display: none;
+  }
 `
 
-export const StyledSelect = styled.select`
+export const StyledSelect = styled.div`
   border-radius: 8px;
   border: solid 1px ${({ theme }) => theme.colors.lightGray};
   color: ${({ theme }) => theme.colors.darkGray};
@@ -15,6 +19,7 @@ export const StyledSelect = styled.select`
   appearance: none;
   width: 100%;
   cursor: pointer;
+  min-height: 3rem;
 `
 
 export const SelectWrapper = styled.div<{ $isOpened: boolean }>`
@@ -30,7 +35,7 @@ export const SelectWrapper = styled.div<{ $isOpened: boolean }>`
     display: block;
     position: absolute;
     right: ${({ theme }) => theme.spaces[200]};
-    top: 50%;
+    top: 1.5rem;
     z-index: 1;
     transition: all 0.3s;
   }
@@ -63,4 +68,31 @@ export const LabelText = styled.span`
   color: ${({ theme }) => theme.colors.darkestGray};
   font-size: ${({ theme }) => theme.typo[100]};
   margin-bottom: ${({ theme }) => theme.spaces[100]};
+`
+
+export const OptionsList = styled.ul`
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border: solid 1px ${({ theme }) => theme.colors.lightGray};
+  color: ${({ theme }) => theme.colors.darkGray};
+  background-color: ${({ theme }) => theme.colors.lightestColor};
+  font-size: ${({ theme }) => theme.typo[200]};
+  cursor: pointer;
+  position: absolute;
+  width: 100%;
+  transform: translateY(-0.5rem);
+  max-height: 50vh;
+  overflow: auto;
+
+  > li {
+    padding: ${({ theme }) => theme.spaces[200]};
+
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.darkGray}10;
+    }
+  }
+
+  @media (min-height: 600px) {
+    max-height: 300px;
+  }
 `
