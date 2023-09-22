@@ -1,12 +1,24 @@
 import styled from 'styled-components'
 
-export const ContentWrapper = styled.label`
+export const ContentWrapper = styled.label<{ $isHorizontal: boolean }>`
   display: flex;
   flex-direction: column;
 
   input {
     display: none;
   }
+
+  ${({ $isHorizontal, theme }) =>
+    $isHorizontal
+      ? `
+      flex-direction: row;
+      align-items: center;
+
+      > *:first-child {
+        margin-right: ${theme.spaces[400]};
+      }
+    `
+      : null}
 `
 
 export const StyledSelect = styled.div`

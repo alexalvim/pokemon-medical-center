@@ -10,9 +10,14 @@ import {
 interface SelectFieldProps {
   label: string
   placeholder: string
+  isHorizontal?: boolean
 }
 
-export const SelectField = ({ label, placeholder }: SelectFieldProps) => {
+export const SelectField = ({
+  label,
+  placeholder,
+  isHorizontal,
+}: SelectFieldProps) => {
   const [isOpened, setIsOpened] = useState(false)
   const [selectedValue, setSelectedValue] = useState('')
   const wrapperRef = useRef<HTMLLabelElement>(null)
@@ -39,7 +44,7 @@ export const SelectField = ({ label, placeholder }: SelectFieldProps) => {
   }, [])
 
   return (
-    <ContentWrapper ref={wrapperRef}>
+    <ContentWrapper $isHorizontal={!!isHorizontal} ref={wrapperRef}>
       <LabelText>{label}</LabelText>
       <SelectWrapper $isOpened={isOpened}>
         <StyledSelect
