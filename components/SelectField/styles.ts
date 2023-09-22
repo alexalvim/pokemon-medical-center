@@ -83,6 +83,7 @@ export const OptionsList = styled.ul`
   transform: translateY(-0.5rem);
   max-height: 50vh;
   overflow: auto;
+  box-shadow: 0 4px 4px 0 ${({ theme }) => theme.colors.darkestColor}13;
 
   > li {
     padding: ${({ theme }) => theme.spaces[200]};

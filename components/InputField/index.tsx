@@ -1,10 +1,15 @@
 import { ContentWrapper, LabelText, StyledInput } from './styles'
 
-export const InputField = () => {
+interface InputFieldProps {
+  label: string
+  placeholder: string
+}
+
+export const InputField = ({ label, placeholder }: InputFieldProps) => {
   return (
     <ContentWrapper>
-      <LabelText>Label</LabelText>
-      <StyledInput type={'text'} placeholder={'Test'} />
+      <LabelText>{label}</LabelText>
+      <StyledInput type={'text'} placeholder={placeholder} />
     </ContentWrapper>
   )
 }

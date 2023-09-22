@@ -7,7 +7,12 @@ import {
   StyledSelect,
 } from './styles'
 
-export const SelectField = () => {
+interface SelectFieldProps {
+  label: string
+  placeholder: string
+}
+
+export const SelectField = ({ label, placeholder }: SelectFieldProps) => {
   const [isOpened, setIsOpened] = useState(false)
   const [selectedValue, setSelectedValue] = useState('')
   const wrapperRef = useRef<HTMLLabelElement>(null)
@@ -35,7 +40,7 @@ export const SelectField = () => {
 
   return (
     <ContentWrapper ref={wrapperRef}>
-      <LabelText>Label</LabelText>
+      <LabelText>{label}</LabelText>
       <SelectWrapper $isOpened={isOpened}>
         <StyledSelect
           role={'button'}
@@ -43,7 +48,7 @@ export const SelectField = () => {
             setIsOpened((io) => !io)
           }}
         >
-          {selectedValue || 'placeholder'}
+          {selectedValue || placeholder}
         </StyledSelect>
         {isOpened ? (
           <OptionsList>

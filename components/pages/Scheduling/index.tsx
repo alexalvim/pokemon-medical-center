@@ -2,8 +2,10 @@ import { useState } from 'react'
 import {
   ContentHolder,
   ContentWrapper,
+  FormTitle,
   FormWrapper,
   ResponseWrapper,
+  Row,
 } from './styles'
 import { NoticeBox } from '../../NoticeBox'
 import checkIcon from '../../../public/check.svg'
@@ -25,10 +27,30 @@ export const Scheduling = () => {
       />
       <ContentHolder>
         {pageStatus === 'waiting' ? (
-          <FormWrapper>
-            <InputField />
-            <SelectField />
-          </FormWrapper>
+          <>
+            <FormTitle>
+              Preencha o formulário abaixo para agendar sua consulta
+            </FormTitle>
+            <FormWrapper>
+              <Row>
+                <InputField label={'Nome'} placeholder={'Digite seu nome'} />
+                <InputField
+                  label={'Sobrenome'}
+                  placeholder={'Digite seu sobrenome'}
+                />
+              </Row>
+              <Row>
+                <SelectField
+                  label={'Região'}
+                  placeholder={'Selecione sua região'}
+                />
+                <SelectField
+                  label={'Cidade'}
+                  placeholder={'Selecione sua cidade'}
+                />
+              </Row>
+            </FormWrapper>
+          </>
         ) : (
           <ResponseWrapper>
             {pageStatus === 'success' ? (

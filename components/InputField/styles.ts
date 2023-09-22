@@ -12,6 +12,7 @@ export const StyledInput = styled.input`
   font-size: ${({ theme }) => theme.typo[200]};
   padding: ${({ theme }) => theme.spaces[200]};
   font-weight: 500;
+  outline: none;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.darkGray};
