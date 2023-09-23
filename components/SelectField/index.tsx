@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import {
   ContentWrapper,
+  EmptyMessage,
   LabelText,
   OptionsList,
+  OptionsWrapper,
   SelectWrapper,
   StyledSelect,
 } from './styles'
@@ -10,12 +12,14 @@ import {
 interface SelectFieldProps {
   label: string
   placeholder: string
+  options: string[]
   isHorizontal?: boolean
 }
 
 export const SelectField = ({
   label,
   placeholder,
+  options,
   isHorizontal,
 }: SelectFieldProps) => {
   const [isOpened, setIsOpened] = useState(false)
@@ -56,9 +60,22 @@ export const SelectField = ({
           {selectedValue || placeholder}
         </StyledSelect>
         {isOpened ? (
-          <OptionsList>
-            <li onClick={() => handleSelectOption('Test')}>Test</li>
-          </OptionsList>
+          <OptionsWrapper>
+            {options.length > 0 ? (
+              <OptionsList>
+                {options.map((option, i) => (
+                  <li
+                    key={`${option}-{i}`}
+                    onClick={() => handleSelectOption(option)}
+                  >
+                    {option}
+                  </li>
+                ))}
+              </OptionsList>
+            ) : (
+              <EmptyMessage>Nenhuma opção carregada</EmptyMessage>
+            )}
+          </OptionsWrapper>
         ) : null}
         <input type="text" value={selectedValue} readOnly />
       </SelectWrapper>

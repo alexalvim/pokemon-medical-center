@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   ContentHolder,
   ContentWrapper,
@@ -21,11 +21,46 @@ import { SelectField } from '../../SelectField'
 import { OutlinedButton } from '../../OutlinedButton'
 import { PurchaseDetails } from '../../PurchaseDetails'
 import { Button } from '../../Button'
+import {
+  Location,
+  Pokemon,
+  Region,
+  getLocations,
+  getPokemons,
+  getRegions,
+} from '../../../api/pokemon'
+import { formatName } from '../../../ultils/formatters'
 
 type PageStatus = 'waiting' | 'success' | 'error'
 
 export const Scheduling = () => {
   const [pageStatus, setPageStatus] = useState<PageStatus>('waiting')
+  const [regions, setRegions] = useState<Region[]>([])
+  const [locations, setLocations] = useState<Location[]>([])
+  const [pokemons, setPokemons] = useState<Pokemon[]>([])
+
+  useEffect(() => {
+    const fillSelects = async () => {
+      const [resultRegions, resultPokemons] = await Promise.all([
+        getRegions(),
+        getPokemons(),
+      ])
+
+      setRegions(resultRegions)
+      setPokemons(resultPokemons)
+    }
+
+    fillSelects()
+  }, [])
+
+  useEffect(() => {
+    const fillLocation = async () => {
+      const resultLocations = await getLocations('kanto')
+      setLocations(resultLocations)
+    }
+
+    fillLocation()
+  }, [])
 
   return (
     <ContentWrapper>
@@ -51,10 +86,14 @@ export const Scheduling = () => {
                 <SelectField
                   label={'Região'}
                   placeholder={'Selecione sua região'}
+                  options={regions.map((region) => formatName(region.name))}
                 />
                 <SelectField
                   label={'Cidade'}
                   placeholder={'Selecione sua cidade'}
+                  options={locations.map((location) =>
+                    formatName(location.name),
+                  )}
                 />
               </Row>
               <TeamRegister>
@@ -69,11 +108,17 @@ export const Scheduling = () => {
                     label={'Pokémon 01'}
                     placeholder={'Selecione seu pokémon'}
                     isHorizontal={true}
+                    options={pokemons.map((pokemon) =>
+                      formatName(pokemon.name),
+                    )}
                   />
                   <SelectField
                     label={'Pokémon 02'}
                     placeholder={'Selecione seu pokémon'}
                     isHorizontal={true}
+                    options={pokemons.map((pokemon) =>
+                      formatName(pokemon.name),
+                    )}
                   />
                 </TeamRegisterFields>
                 <OutlinedButton
@@ -88,10 +133,12 @@ export const Scheduling = () => {
                 <SelectField
                   label={'Data para atendimento'}
                   placeholder={'Selecione uma data'}
+                  options={[]}
                 />
                 <SelectField
                   label={'Horário de atendimento'}
                   placeholder={'Selecione um horário'}
+                  options={[]}
                 />
               </Row>
               <PurchaseDetails />

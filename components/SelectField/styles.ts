@@ -82,20 +82,24 @@ export const LabelText = styled.span`
   margin-bottom: ${({ theme }) => theme.spaces[100]};
 `
 
-export const OptionsList = styled.ul`
+export const OptionsWrapper = styled.div`
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   border: solid 1px ${({ theme }) => theme.colors.lightGray};
   color: ${({ theme }) => theme.colors.darkGray};
   background-color: ${({ theme }) => theme.colors.lightestColor};
   font-size: ${({ theme }) => theme.typo[200]};
-  cursor: pointer;
   position: absolute;
   width: 100%;
   transform: translateY(-0.5rem);
+  box-shadow: 0 4px 4px 0 ${({ theme }) => theme.colors.darkestColor}13;
+  z-index: 10;
+`
+
+export const OptionsList = styled.ul`
+  cursor: pointer;
   max-height: 50vh;
   overflow: auto;
-  box-shadow: 0 4px 4px 0 ${({ theme }) => theme.colors.darkestColor}13;
 
   > li {
     padding: ${({ theme }) => theme.spaces[200]};
@@ -108,4 +112,10 @@ export const OptionsList = styled.ul`
   @media (min-height: 600px) {
     max-height: 300px;
   }
+`
+
+export const EmptyMessage = styled.span`
+  text-align: center;
+  display: block;
+  padding: ${({ theme }) => theme.spaces[200]};
 `
