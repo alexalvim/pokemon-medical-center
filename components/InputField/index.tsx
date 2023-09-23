@@ -1,21 +1,29 @@
 import { UseFormRegisterReturn } from 'react-hook-form'
-import { ContentWrapper, LabelText, StyledInput } from './styles'
+import { ContentWrapper, ErrorMessage, LabelText, StyledInput } from './styles'
 
 interface InputFieldProps {
   label: string
   placeholder: string
   formProps: UseFormRegisterReturn<string>
+  errorMessage: string
 }
 
 export const InputField = ({
   label,
   placeholder,
   formProps,
+  errorMessage,
 }: InputFieldProps) => {
   return (
     <ContentWrapper>
       <LabelText>{label}</LabelText>
-      <StyledInput type={'text'} placeholder={placeholder} {...formProps} />
+      <StyledInput
+        $hasError={errorMessage !== ''}
+        type={'text'}
+        placeholder={placeholder}
+        {...formProps}
+      />
+      {errorMessage ? <ErrorMessage>{errorMessage}</ErrorMessage> : null}
     </ContentWrapper>
   )
 }

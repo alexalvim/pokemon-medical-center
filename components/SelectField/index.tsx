@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import {
   ContentWrapper,
   EmptyMessage,
+  ErrorMessage,
+  InputWrapper,
   LabelText,
   OptionsList,
   OptionsWrapper,
@@ -18,6 +20,7 @@ interface SelectFieldProps {
   register: UseFormRegister<FieldValues>
   name: string
   setFormValue: UseFormSetValue<FieldValues>
+  errorMessage: string
 }
 
 export const SelectField = ({
@@ -28,6 +31,7 @@ export const SelectField = ({
   register,
   name,
   setFormValue,
+  errorMessage,
 }: SelectFieldProps) => {
   const [isOpened, setIsOpened] = useState(false)
   const [selectedValue, setSelectedValue] = useState('')
@@ -58,35 +62,41 @@ export const SelectField = ({
   return (
     <ContentWrapper $isHorizontal={!!isHorizontal} ref={wrapperRef}>
       <LabelText>{label}</LabelText>
-      <SelectWrapper $isOpened={isOpened}>
-        <StyledSelect
-          role={'button'}
-          onClick={() => {
-            setIsOpened((io) => !io)
-          }}
-        >
-          {selectedValue || placeholder}
-        </StyledSelect>
-        {isOpened ? (
-          <OptionsWrapper>
-            {options.length > 0 ? (
-              <OptionsList>
-                {options.map((option, i) => (
-                  <li
-                    key={`${option}-{i}`}
-                    onClick={() => handleSelectOption(option)}
-                  >
-                    {option}
-                  </li>
-                ))}
-              </OptionsList>
-            ) : (
-              <EmptyMessage>Nenhuma opção carregada</EmptyMessage>
-            )}
-          </OptionsWrapper>
+      <InputWrapper>
+        <SelectWrapper $isOpened={isOpened}>
+          <StyledSelect
+            $hasError={errorMessage !== '' && !selectedValue}
+            role={'button'}
+            onClick={() => {
+              setIsOpened((io) => !io)
+            }}
+          >
+            {selectedValue || placeholder}
+          </StyledSelect>
+          {isOpened ? (
+            <OptionsWrapper>
+              {options.length > 0 ? (
+                <OptionsList>
+                  {options.map((option, i) => (
+                    <li
+                      key={`${option}-{i}`}
+                      onClick={() => handleSelectOption(option)}
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </OptionsList>
+              ) : (
+                <EmptyMessage>Nenhuma opção carregada</EmptyMessage>
+              )}
+            </OptionsWrapper>
+          ) : null}
+          <input type="text" value={selectedValue} {...register(name)} />
+        </SelectWrapper>
+        {!selectedValue && errorMessage ? (
+          <ErrorMessage>{errorMessage}</ErrorMessage>
         ) : null}
-        <input type="text" value={selectedValue} {...register(name)} />
-      </SelectWrapper>
+      </InputWrapper>
     </ContentWrapper>
   )
 }

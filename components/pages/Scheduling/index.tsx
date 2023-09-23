@@ -117,19 +117,10 @@ export const Scheduling = () => {
   }, [watchedDate])
 
   const onSubmit = async (data: Record<string, string>) => {
-    // await addParticipant({
-    //   user,
-    //   barbecueId: barbecue?.id || '',
-    //   participant: {
-    //     id: uuidv4(),
-    //     name: data.name,
-    //     contributeValue: +data.contributeValue,
-    //     paid: false,
-    //   },
-    // })
-    // onClose()
-    // reset()
+    console.log('Submitei')
   }
+
+  console.log({ errors })
 
   return (
     <ContentWrapper>
@@ -147,11 +138,13 @@ export const Scheduling = () => {
               <FormWrapper>
                 <Row>
                   <InputField
+                    errorMessage={(errors.name?.message as string) || ''}
                     formProps={{ ...register('name') }}
                     label={'Nome'}
                     placeholder={'Digite seu nome'}
                   />
                   <InputField
+                    errorMessage={(errors.lastName?.message as string) || ''}
                     formProps={{ ...register('lastName') }}
                     label={'Sobrenome'}
                     placeholder={'Digite seu sobrenome'}
@@ -165,6 +158,7 @@ export const Scheduling = () => {
                     register={register}
                     name={'region'}
                     setFormValue={setValue}
+                    errorMessage={(errors.region?.message as string) || ''}
                   />
                   <SelectField
                     label={'Cidade'}
@@ -175,6 +169,7 @@ export const Scheduling = () => {
                     register={register}
                     name={'location'}
                     setFormValue={setValue}
+                    errorMessage={(errors.location?.message as string) || ''}
                   />
                 </Row>
                 <TeamRegister>
@@ -195,6 +190,7 @@ export const Scheduling = () => {
                       register={register}
                       name={'pokemon'}
                       setFormValue={setValue}
+                      errorMessage={(errors.pokemon?.message as string) || ''}
                     />
                   </TeamRegisterFields>
                   <OutlinedButton
@@ -213,6 +209,7 @@ export const Scheduling = () => {
                     register={register}
                     name={'date'}
                     setFormValue={setValue}
+                    errorMessage={(errors.date?.message as string) || ''}
                   />
                   <SelectField
                     label={'Horário de atendimento'}
@@ -221,15 +218,13 @@ export const Scheduling = () => {
                     register={register}
                     name={'time'}
                     setFormValue={setValue}
+                    errorMessage={(errors.time?.message as string) || ''}
                   />
                 </Row>
                 <PurchaseDetails />
                 <SubmitHolder>
                   <span>Valor Total: R$ 72,10</span>
-                  <Button
-                    onClick={() => console.log('teste')}
-                    label={'Concluir agendamento'}
-                  />
+                  <Button type={'submit'} label={'Concluir agendamento'} />
                 </SubmitHolder>
               </FormWrapper>
             </form>

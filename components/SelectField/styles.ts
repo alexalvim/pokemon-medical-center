@@ -12,16 +12,17 @@ export const ContentWrapper = styled.label<{ $isHorizontal: boolean }>`
     $isHorizontal
       ? `
       flex-direction: row;
-      align-items: center;
+      align-items: start;
 
       > *:first-child {
         margin-right: ${theme.spaces[400]};
+        padding-top: calc(${theme.spaces[200]} + 1px);
       }
     `
       : null}
 `
 
-export const StyledSelect = styled.div`
+export const StyledSelect = styled.div<{ $hasError: boolean }>`
   border-radius: 8px;
   border: solid 1px ${({ theme }) => theme.colors.lightGray};
   color: ${({ theme }) => theme.colors.darkGray};
@@ -32,6 +33,9 @@ export const StyledSelect = styled.div`
   width: 100%;
   cursor: pointer;
   min-height: 3rem;
+
+  ${({ $hasError, theme }) =>
+    $hasError ? `border-color: ${theme.colors.errorRed};` : null}
 `
 
 export const SelectWrapper = styled.div<{ $isOpened: boolean }>`
@@ -118,4 +122,16 @@ export const EmptyMessage = styled.span`
   text-align: center;
   display: block;
   padding: ${({ theme }) => theme.spaces[200]};
+`
+
+export const ErrorMessage = styled.span`
+  font-weight: 700;
+  display: block;
+  color: ${({ theme }) => theme.colors.errorRed};
+  font-size: ${({ theme }) => theme.typo[100]};
+  padding: ${({ theme }) => theme.spaces[100]};
+`
+
+export const InputWrapper = styled.div`
+  flex-grow: 1;
 `

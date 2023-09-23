@@ -10,6 +10,7 @@ export const light = {
     darkestGray: '#1D1D1D',
     blue: '#0FA4E4',
     dangerRed: '#DF8686',
+    errorRed: '#E40F0F',
   },
 
   spaces: {

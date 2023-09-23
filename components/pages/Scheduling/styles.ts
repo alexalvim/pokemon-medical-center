@@ -86,4 +86,10 @@ export const SubmitHolder = styled.div`
   align-items: center;
   justify-content: space-between;
   margin: ${({ theme }) => `${theme.spaces[600]} 0 ${theme.spaces[900]}`};
+
+  span {
+    color: ${({ theme }) => theme.colors.darkestGray};
+    font-size: ${({ theme }) => theme.typo[600]};
+    font-weight: 600;
+  }
 `

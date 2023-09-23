@@ -13,6 +13,7 @@ declare module 'styled-components' {
       darkestGray: string
       blue: string
       dangerRed: string
+      errorRed: string
     }
 
     spaces: {
