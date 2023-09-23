@@ -30,6 +30,10 @@ import {
   getRegions,
 } from '../../../api/pokemon'
 import { formatName } from '../../../ultils/formatters'
+import {
+  getAppointmentDates,
+  getAppointmentTimes,
+} from '../../../api/appointment'
 
 type PageStatus = 'waiting' | 'success' | 'error'
 
@@ -38,16 +42,23 @@ export const Scheduling = () => {
   const [regions, setRegions] = useState<Region[]>([])
   const [locations, setLocations] = useState<Location[]>([])
   const [pokemons, setPokemons] = useState<Pokemon[]>([])
+  const [dates, setDates] = useState<string[]>([])
+  const [times, setTimes] = useState<string[]>([])
 
   useEffect(() => {
     const fillSelects = async () => {
-      const [resultRegions, resultPokemons] = await Promise.all([
-        getRegions(),
-        getPokemons(),
-      ])
+      const [resultRegions, resultPokemons, resultDates, resultTimes] =
+        await Promise.all([
+          getRegions(),
+          getPokemons(),
+          getAppointmentDates(),
+          getAppointmentTimes('10/10/2023'),
+        ])
 
       setRegions(resultRegions)
       setPokemons(resultPokemons)
+      setDates(resultDates)
+      setTimes(resultTimes)
     }
 
     fillSelects()
@@ -133,12 +144,12 @@ export const Scheduling = () => {
                 <SelectField
                   label={'Data para atendimento'}
                   placeholder={'Selecione uma data'}
-                  options={[]}
+                  options={dates}
                 />
                 <SelectField
                   label={'Horário de atendimento'}
                   placeholder={'Selecione um horário'}
-                  options={[]}
+                  options={times}
                 />
               </Row>
               <PurchaseDetails />
