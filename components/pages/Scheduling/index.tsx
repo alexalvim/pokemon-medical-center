@@ -29,13 +29,32 @@ import {
   getPokemons,
   getRegions,
 } from '../../../api/pokemon'
-import { formatName } from '../../../ultils/formatters'
+import { formatName, formatUrlData } from '../../../ultils/formatters'
 import {
   getAppointmentDates,
   getAppointmentTimes,
 } from '../../../api/appointment'
+import z from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 type PageStatus = 'waiting' | 'success' | 'error'
+
+const scheduleFormSchema = z.object({
+  name: z
+    .string()
+    .nonempty('Nome é obrigatório')
+    .min(2, 'Nome deve ter no mínimo 2 caracteres'),
+  lastName: z
+    .string()
+    .nonempty('Sobrenome é obrigatório')
+    .min(2, 'Sobrenome deve ter no mínimo 2 caracteres'),
+  region: z.string().nonempty('Região é obrigatório'),
+  location: z.string().nonempty('Cidade é obrigatório'),
+  pokemon: z.string().nonempty('Pokémon é obrigatório'),
+  date: z.string().nonempty('Data é obrigatório'),
+  time: z.string().nonempty('Horário é obrigatório'),
+})
 
 export const Scheduling = () => {
   const [pageStatus, setPageStatus] = useState<PageStatus>('waiting')
@@ -44,34 +63,73 @@ export const Scheduling = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([])
   const [dates, setDates] = useState<string[]>([])
   const [times, setTimes] = useState<string[]>([])
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    watch,
+    setValue,
+  } = useForm({
+    resolver: zodResolver(scheduleFormSchema),
+  })
+  const watchedRegion = watch('region')
+  const watchedDate = watch('date')
 
   useEffect(() => {
     const fillSelects = async () => {
-      const [resultRegions, resultPokemons, resultDates, resultTimes] =
-        await Promise.all([
-          getRegions(),
-          getPokemons(),
-          getAppointmentDates(),
-          getAppointmentTimes('10/10/2023'),
-        ])
+      const [resultRegions, resultPokemons, resultDates] = await Promise.all([
+        getRegions(),
+        getPokemons(),
+        getAppointmentDates(),
+      ])
 
       setRegions(resultRegions)
       setPokemons(resultPokemons)
       setDates(resultDates)
-      setTimes(resultTimes)
     }
 
     fillSelects()
   }, [])
 
   useEffect(() => {
-    const fillLocation = async () => {
-      const resultLocations = await getLocations('kanto')
-      setLocations(resultLocations)
-    }
+    if (watchedRegion) {
+      const fillLocation = async () => {
+        setLocations([])
+        const resultLocations = await getLocations(formatUrlData(watchedRegion))
+        setLocations(resultLocations)
+      }
 
-    fillLocation()
-  }, [])
+      fillLocation()
+    }
+  }, [watchedRegion])
+
+  useEffect(() => {
+    if (watchedDate) {
+      const fillTimes = async () => {
+        setTimes([])
+        const resultTimes = await getAppointmentTimes(watchedDate)
+        setTimes(resultTimes)
+      }
+
+      fillTimes()
+    }
+  }, [watchedDate])
+
+  const onSubmit = async (data: Record<string, string>) => {
+    // await addParticipant({
+    //   user,
+    //   barbecueId: barbecue?.id || '',
+    //   participant: {
+    //     id: uuidv4(),
+    //     name: data.name,
+    //     contributeValue: +data.contributeValue,
+    //     paid: false,
+    //   },
+    // })
+    // onClose()
+    // reset()
+  }
 
   return (
     <ContentWrapper>
@@ -85,82 +143,96 @@ export const Scheduling = () => {
             <FormTitle>
               Preencha o formulário abaixo para agendar sua consulta
             </FormTitle>
-            <FormWrapper>
-              <Row>
-                <InputField label={'Nome'} placeholder={'Digite seu nome'} />
-                <InputField
-                  label={'Sobrenome'}
-                  placeholder={'Digite seu sobrenome'}
-                />
-              </Row>
-              <Row>
-                <SelectField
-                  label={'Região'}
-                  placeholder={'Selecione sua região'}
-                  options={regions.map((region) => formatName(region.name))}
-                />
-                <SelectField
-                  label={'Cidade'}
-                  placeholder={'Selecione sua cidade'}
-                  options={locations.map((location) =>
-                    formatName(location.name),
-                  )}
-                />
-              </Row>
-              <TeamRegister>
-                <TeamRegisterHighlightedText>
-                  Cadastre seu time
-                </TeamRegisterHighlightedText>
-                <TeamRegisterText>
-                  Atendemos até 06 pokémons por vez
-                </TeamRegisterText>
-                <TeamRegisterFields>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormWrapper>
+                <Row>
+                  <InputField
+                    formProps={{ ...register('name') }}
+                    label={'Nome'}
+                    placeholder={'Digite seu nome'}
+                  />
+                  <InputField
+                    formProps={{ ...register('lastName') }}
+                    label={'Sobrenome'}
+                    placeholder={'Digite seu sobrenome'}
+                  />
+                </Row>
+                <Row>
                   <SelectField
-                    label={'Pokémon 01'}
-                    placeholder={'Selecione seu pokémon'}
-                    isHorizontal={true}
-                    options={pokemons.map((pokemon) =>
-                      formatName(pokemon.name),
-                    )}
+                    label={'Região'}
+                    placeholder={'Selecione sua região'}
+                    options={regions.map((region) => formatName(region.name))}
+                    register={register}
+                    name={'region'}
+                    setFormValue={setValue}
                   />
                   <SelectField
-                    label={'Pokémon 02'}
-                    placeholder={'Selecione seu pokémon'}
-                    isHorizontal={true}
-                    options={pokemons.map((pokemon) =>
-                      formatName(pokemon.name),
+                    label={'Cidade'}
+                    placeholder={'Selecione sua cidade'}
+                    options={locations.map((location) =>
+                      formatName(location.name),
                     )}
+                    register={register}
+                    name={'location'}
+                    setFormValue={setValue}
                   />
-                </TeamRegisterFields>
-                <OutlinedButton
-                  onClick={() => {
-                    console.log('test')
-                  }}
-                  label={'Adicionar novo pokémon ao time...'}
-                  rightLabel="+"
-                />
-              </TeamRegister>
-              <Row>
-                <SelectField
-                  label={'Data para atendimento'}
-                  placeholder={'Selecione uma data'}
-                  options={dates}
-                />
-                <SelectField
-                  label={'Horário de atendimento'}
-                  placeholder={'Selecione um horário'}
-                  options={times}
-                />
-              </Row>
-              <PurchaseDetails />
-              <SubmitHolder>
-                <span>Valor Total: R$ 72,10</span>
-                <Button
-                  onClick={() => console.log('teste')}
-                  label={'Concluir agendamento'}
-                />
-              </SubmitHolder>
-            </FormWrapper>
+                </Row>
+                <TeamRegister>
+                  <TeamRegisterHighlightedText>
+                    Cadastre seu time
+                  </TeamRegisterHighlightedText>
+                  <TeamRegisterText>
+                    Atendemos até 06 pokémons por vez
+                  </TeamRegisterText>
+                  <TeamRegisterFields>
+                    <SelectField
+                      label={'Pokémon 01'}
+                      placeholder={'Selecione seu pokémon'}
+                      isHorizontal={true}
+                      options={pokemons.map((pokemon) =>
+                        formatName(pokemon.name),
+                      )}
+                      register={register}
+                      name={'pokemon'}
+                      setFormValue={setValue}
+                    />
+                  </TeamRegisterFields>
+                  <OutlinedButton
+                    onClick={() => {
+                      console.log('test')
+                    }}
+                    label={'Adicionar novo pokémon ao time...'}
+                    rightLabel="+"
+                  />
+                </TeamRegister>
+                <Row>
+                  <SelectField
+                    label={'Data para atendimento'}
+                    placeholder={'Selecione uma data'}
+                    options={dates}
+                    register={register}
+                    name={'date'}
+                    setFormValue={setValue}
+                  />
+                  <SelectField
+                    label={'Horário de atendimento'}
+                    placeholder={'Selecione um horário'}
+                    options={times}
+                    register={register}
+                    name={'time'}
+                    setFormValue={setValue}
+                  />
+                </Row>
+                <PurchaseDetails />
+                <SubmitHolder>
+                  <span>Valor Total: R$ 72,10</span>
+                  <Button
+                    onClick={() => console.log('teste')}
+                    label={'Concluir agendamento'}
+                  />
+                </SubmitHolder>
+              </FormWrapper>
+            </form>
           </>
         ) : (
           <ResponseWrapper>

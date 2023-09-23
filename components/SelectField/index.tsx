@@ -8,12 +8,16 @@ import {
   SelectWrapper,
   StyledSelect,
 } from './styles'
+import { FieldValues, UseFormRegister, UseFormSetValue } from 'react-hook-form'
 
 interface SelectFieldProps {
   label: string
   placeholder: string
   options: string[]
   isHorizontal?: boolean
+  register: UseFormRegister<FieldValues>
+  name: string
+  setFormValue: UseFormSetValue<FieldValues>
 }
 
 export const SelectField = ({
@@ -21,6 +25,9 @@ export const SelectField = ({
   placeholder,
   options,
   isHorizontal,
+  register,
+  name,
+  setFormValue,
 }: SelectFieldProps) => {
   const [isOpened, setIsOpened] = useState(false)
   const [selectedValue, setSelectedValue] = useState('')
@@ -29,6 +36,7 @@ export const SelectField = ({
   const handleSelectOption = (value: string) => {
     setSelectedValue(value)
     setIsOpened(false)
+    setFormValue(name, value)
   }
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -77,7 +85,7 @@ export const SelectField = ({
             )}
           </OptionsWrapper>
         ) : null}
-        <input type="text" value={selectedValue} readOnly />
+        <input type="text" value={selectedValue} {...register(name)} />
       </SelectWrapper>
     </ContentWrapper>
   )
