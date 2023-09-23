@@ -1,8 +1,11 @@
+import { useRouter } from 'next/navigation'
 import { Button } from '../Button'
 import { PokeballButton } from '../PokeballButton'
 import { ContentHolder, ContentWrapper, HeaderLink } from './styles'
 
 export const Header = () => {
+  const router = useRouter()
+
   return (
     <ContentWrapper>
       <ContentHolder>
@@ -11,7 +14,7 @@ export const Header = () => {
           <HeaderLink href={'/about-us'}>Quem somos</HeaderLink>
           <Button
             onClick={() => {
-              console.log('clicked')
+              router.push('/scheduling')
             }}
             label={'Agendar consulta'}
           />

@@ -6,6 +6,7 @@ import {
   FormWrapper,
   ResponseWrapper,
   Row,
+  SubmitHolder,
   TeamRegister,
   TeamRegisterFields,
   TeamRegisterHighlightedText,
@@ -18,6 +19,8 @@ import { PageSummary } from '../../PageSummary'
 import { InputField } from '../../InputField'
 import { SelectField } from '../../SelectField'
 import { OutlinedButton } from '../../OutlinedButton'
+import { PurchaseDetails } from '../../PurchaseDetails'
+import { Button } from '../../Button'
 
 type PageStatus = 'waiting' | 'success' | 'error'
 
@@ -91,6 +94,14 @@ export const Scheduling = () => {
                   placeholder={'Selecione um horário'}
                 />
               </Row>
+              <PurchaseDetails />
+              <SubmitHolder>
+                <span>Valor Total: R$ 72,10</span>
+                <Button
+                  onClick={() => console.log('teste')}
+                  label={'Concluir agendamento'}
+                />
+              </SubmitHolder>
             </FormWrapper>
           </>
         ) : (

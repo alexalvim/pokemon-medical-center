@@ -27,6 +27,7 @@ export const light = {
   },
 
   typo: {
+    50: '0.5rem',
     100: '0.75rem',
     200: '0.875rem',
     300: '1rem',

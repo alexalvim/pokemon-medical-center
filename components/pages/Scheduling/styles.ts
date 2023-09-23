@@ -80,3 +80,10 @@ export const TeamRegisterFields = styled.div`
     margin-bottom: ${({ theme }) => theme.spaces[500]};
   }
 `
+
+export const SubmitHolder = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: ${({ theme }) => `${theme.spaces[600]} 0 ${theme.spaces[900]}`};
+`
