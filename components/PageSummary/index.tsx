@@ -17,7 +17,7 @@ export const PageSummary = ({ title, subtitle }: PageSummaryProps) => {
     <ContentWrapper>
       <ContentHolder>
         <MapText>
-          Home
+          <span>Home</span>
           <MapSeparator>{'>'}</MapSeparator>
           {title}
         </MapText>
