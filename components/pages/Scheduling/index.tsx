@@ -24,7 +24,11 @@ import {
   getPokemons,
   getRegions,
 } from '../../../api/pokemon'
-import { formatName, formatUrlData } from '../../../ultils/formatters'
+import {
+  formatCentsToCurrency,
+  formatName,
+  formatUrlData,
+} from '../../../ultils/formatters'
 import {
   getAppointmentDates,
   getAppointmentTimes,
@@ -40,6 +44,7 @@ import {
 } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TeamRegister } from '../../TeamRegister'
+import { calculateValueWithTax } from '../../../ultils/purchase'
 
 type PageStatus = 'waiting' | 'success' | 'error'
 
@@ -257,9 +262,14 @@ export const Scheduling = () => {
                     errorMessage={(errors.time?.message as string) || ''}
                   />
                 </Row>
-                <PurchaseDetails />
+                <PurchaseDetails pokemonsQuantity={watchedPokemons.length} />
                 <SubmitHolder>
-                  <span>Valor Total: R$ 72,10</span>
+                  <span>
+                    Valor Total: R${' '}
+                    {formatCentsToCurrency(
+                      calculateValueWithTax(watchedPokemons.length),
+                    )}
+                  </span>
                   <Button type={'submit'} label={'Concluir agendamento'} />
                 </SubmitHolder>
               </FormWrapper>
