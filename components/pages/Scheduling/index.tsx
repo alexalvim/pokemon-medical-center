@@ -7,10 +7,6 @@ import {
   ResponseWrapper,
   Row,
   SubmitHolder,
-  TeamRegister,
-  TeamRegisterFields,
-  TeamRegisterHighlightedText,
-  TeamRegisterText,
 } from './styles'
 import { NoticeBox } from '../../NoticeBox'
 import checkIcon from '../../../public/check.svg'
@@ -18,7 +14,6 @@ import warningIcon from '../../../public/warning.svg'
 import { PageSummary } from '../../PageSummary'
 import { InputField } from '../../InputField'
 import { SelectField } from '../../SelectField'
-import { OutlinedButton } from '../../OutlinedButton'
 import { PurchaseDetails } from '../../PurchaseDetails'
 import { Button } from '../../Button'
 import {
@@ -35,10 +30,32 @@ import {
   getAppointmentTimes,
 } from '../../../api/appointment'
 import z from 'zod'
-import { useForm } from 'react-hook-form'
+import {
+  FieldValues,
+  SubmitHandler,
+  UseFormRegister,
+  UseFormSetValue,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { TeamRegister } from '../../TeamRegister'
 
 type PageStatus = 'waiting' | 'success' | 'error'
+
+interface PokemonsField {
+  pokemon: string
+}
+
+interface FormSchema {
+  name: string
+  lastName: string
+  region: string
+  location: string
+  pokemons: PokemonsField[]
+  date: string
+  time: string
+}
 
 const scheduleFormSchema = z.object({
   name: z
@@ -51,7 +68,11 @@ const scheduleFormSchema = z.object({
     .min(2, 'Sobrenome deve ter no mínimo 2 caracteres'),
   region: z.string().nonempty('Região é obrigatório'),
   location: z.string().nonempty('Cidade é obrigatório'),
-  pokemon: z.string().nonempty('Pokémon é obrigatório'),
+  pokemons: z.array(
+    z.object({
+      pokemon: z.string().nonempty('Pokémon é obrigatório'),
+    }),
+  ),
   date: z.string().nonempty('Data é obrigatório'),
   time: z.string().nonempty('Horário é obrigatório'),
 })
@@ -66,15 +87,32 @@ export const Scheduling = () => {
   const {
     register,
     handleSubmit,
+    control,
     reset,
     formState: { errors },
     watch,
     setValue,
   } = useForm({
     resolver: zodResolver(scheduleFormSchema),
+    defaultValues: {
+      name: '',
+      lastName: '',
+      region: '',
+      location: '',
+      pokemons: [{ pokemon: '' }],
+      date: '',
+      time: '',
+    },
   })
+
+  const { fields: pokemonsFields, append: appendPokemonField } = useFieldArray({
+    name: 'pokemons',
+    control,
+  })
+
   const watchedRegion = watch('region')
   const watchedDate = watch('date')
+  const watchedPokemons = watch('pokemons')
 
   useEffect(() => {
     const fillSelects = async () => {
@@ -116,11 +154,9 @@ export const Scheduling = () => {
     }
   }, [watchedDate])
 
-  const onSubmit = async (data: Record<string, string>) => {
-    console.log('Submitei')
+  const onSubmit: SubmitHandler<FormSchema> = async (data) => {
+    console.log('Submit')
   }
-
-  console.log({ errors })
 
   return (
     <ContentWrapper>
@@ -155,9 +191,11 @@ export const Scheduling = () => {
                     label={'Região'}
                     placeholder={'Selecione sua região'}
                     options={regions.map((region) => formatName(region.name))}
-                    register={register}
+                    formProps={register('region')}
                     name={'region'}
-                    setFormValue={setValue}
+                    setFormValue={
+                      setValue as unknown as UseFormSetValue<FieldValues>
+                    }
                     errorMessage={(errors.region?.message as string) || ''}
                   />
                   <SelectField
@@ -166,58 +204,56 @@ export const Scheduling = () => {
                     options={locations.map((location) =>
                       formatName(location.name),
                     )}
-                    register={register}
+                    formProps={register('location')}
                     name={'location'}
-                    setFormValue={setValue}
+                    setFormValue={
+                      setValue as unknown as UseFormSetValue<FieldValues>
+                    }
                     errorMessage={(errors.location?.message as string) || ''}
                   />
                 </Row>
-                <TeamRegister>
-                  <TeamRegisterHighlightedText>
-                    Cadastre seu time
-                  </TeamRegisterHighlightedText>
-                  <TeamRegisterText>
-                    Atendemos até 06 pokémons por vez
-                  </TeamRegisterText>
-                  <TeamRegisterFields>
-                    <SelectField
-                      label={'Pokémon 01'}
-                      placeholder={'Selecione seu pokémon'}
-                      isHorizontal={true}
-                      options={pokemons.map((pokemon) =>
-                        formatName(pokemon.name),
-                      )}
-                      register={register}
-                      name={'pokemon'}
-                      setFormValue={setValue}
-                      errorMessage={(errors.pokemon?.message as string) || ''}
-                    />
-                  </TeamRegisterFields>
-                  <OutlinedButton
-                    onClick={() => {
-                      console.log('test')
-                    }}
-                    label={'Adicionar novo pokémon ao time...'}
-                    rightLabel="+"
-                  />
-                </TeamRegister>
+                <TeamRegister
+                  options={pokemons.map((pokemon) => formatName(pokemon.name))}
+                  fields={pokemonsFields}
+                  getNameByIndex={(index: number) =>
+                    `pokemons.${index}.pokemon`
+                  }
+                  setFormValue={
+                    setValue as unknown as UseFormSetValue<FieldValues>
+                  }
+                  register={register as unknown as UseFormRegister<FieldValues>}
+                  getErrorMessageByIndex={(index) =>
+                    (errors.pokemons &&
+                      (errors?.pokemons[index]?.pokemon?.message as string)) ||
+                    ''
+                  }
+                  appendField={() => {
+                    if (watchedPokemons.length < 6) {
+                      appendPokemonField({ pokemon: '' })
+                    }
+                  }}
+                />
                 <Row>
                   <SelectField
                     label={'Data para atendimento'}
                     placeholder={'Selecione uma data'}
                     options={dates}
-                    register={register}
+                    formProps={register('date')}
                     name={'date'}
-                    setFormValue={setValue}
+                    setFormValue={
+                      setValue as unknown as UseFormSetValue<FieldValues>
+                    }
                     errorMessage={(errors.date?.message as string) || ''}
                   />
                   <SelectField
                     label={'Horário de atendimento'}
                     placeholder={'Selecione um horário'}
                     options={times}
-                    register={register}
+                    formProps={register('time')}
                     name={'time'}
-                    setFormValue={setValue}
+                    setFormValue={
+                      setValue as unknown as UseFormSetValue<FieldValues>
+                    }
                     errorMessage={(errors.time?.message as string) || ''}
                   />
                 </Row>

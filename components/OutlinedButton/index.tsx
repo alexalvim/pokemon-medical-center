@@ -3,7 +3,7 @@ import { RightLabel, StyledButton } from './styles'
 interface OutlinedButtonProps {
   label: string
   rightLabel?: string
-  onClick: () => void
+  onClick: (e: React.MouseEvent<HTMLElement>) => void
 }
 
 export const OutlinedButton = ({

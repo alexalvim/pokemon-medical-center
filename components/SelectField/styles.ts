@@ -3,9 +3,16 @@ import styled from 'styled-components'
 export const ContentWrapper = styled.label<{ $isHorizontal: boolean }>`
   display: flex;
   flex-direction: column;
+  position: relative;
 
   input {
-    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    z-index: 0;
   }
 
   ${({ $isHorizontal, theme }) =>
@@ -52,7 +59,7 @@ export const SelectWrapper = styled.div<{ $isOpened: boolean }>`
     position: absolute;
     right: ${({ theme }) => theme.spaces[200]};
     top: 1.5rem;
-    z-index: 1;
+    z-index: 5;
     transition: all 0.3s;
   }
 
