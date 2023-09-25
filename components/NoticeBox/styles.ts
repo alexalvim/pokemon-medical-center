@@ -26,6 +26,8 @@ export const BoxText = styled.span`
   font-weight: 400;
   margin-bottom: ${({ theme }) => theme.spaces[200]};
   text-align: center;
+  white-space: pre-wrap;
+  line-height: 1.25;
 `
 
 export const ImageWrapper = styled.div`

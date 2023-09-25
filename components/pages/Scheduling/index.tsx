@@ -27,9 +27,11 @@ import {
 import {
   formatCentsToCurrency,
   formatName,
+  formatTime,
   formatUrlData,
 } from '../../../ultils/formatters'
 import {
+  createAppointment,
   getAppointmentDates,
   getAppointmentTimes,
 } from '../../../api/appointment'
@@ -45,6 +47,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TeamRegister } from '../../TeamRegister'
 import { calculateValueWithTax } from '../../../ultils/purchase'
+import { AxiosError } from 'axios'
 
 type PageStatus = 'waiting' | 'success' | 'error'
 
@@ -52,7 +55,7 @@ interface PokemonsField {
   pokemon: string
 }
 
-interface FormSchema {
+export interface PokemonFormSchema {
   name: string
   lastName: string
   region: string
@@ -89,6 +92,8 @@ export const Scheduling = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([])
   const [dates, setDates] = useState<string[]>([])
   const [times, setTimes] = useState<string[]>([])
+  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [successMessage, setSuccessMessage] = useState<string>('')
   const {
     register,
     handleSubmit,
@@ -117,30 +122,51 @@ export const Scheduling = () => {
 
   const watchedRegion = watch('region')
   const watchedDate = watch('date')
+  const watchedTime = watch('time')
   const watchedPokemons = watch('pokemons')
 
   useEffect(() => {
     const fillSelects = async () => {
-      const [resultRegions, resultPokemons, resultDates] = await Promise.all([
-        getRegions(),
-        getPokemons(),
-        getAppointmentDates(),
-      ])
+      try {
+        const [resultRegions, resultPokemons, resultDates] = await Promise.all([
+          getRegions(),
+          getPokemons(),
+          getAppointmentDates(),
+        ])
 
-      setRegions(resultRegions)
-      setPokemons(resultPokemons)
-      setDates(resultDates)
+        setRegions(resultRegions)
+        setPokemons(resultPokemons)
+        setDates(resultDates)
+      } catch (e) {
+        if (e instanceof Error) {
+          setPageStatus('error')
+          setErrorMessage(`Error to get select values:\n${e.message}`)
+        }
+      }
     }
 
     fillSelects()
+
+    return () => {
+      reset()
+    }
   }, [])
 
   useEffect(() => {
     if (watchedRegion) {
       const fillLocation = async () => {
         setLocations([])
-        const resultLocations = await getLocations(formatUrlData(watchedRegion))
-        setLocations(resultLocations)
+        try {
+          const resultLocations = await getLocations(
+            formatUrlData(watchedRegion),
+          )
+          setLocations(resultLocations)
+        } catch (e) {
+          if (e instanceof AxiosError) {
+            setPageStatus('error')
+            setErrorMessage(`Error to get location:\n${e.message}`)
+          }
+        }
       }
 
       fillLocation()
@@ -151,16 +177,42 @@ export const Scheduling = () => {
     if (watchedDate) {
       const fillTimes = async () => {
         setTimes([])
-        const resultTimes = await getAppointmentTimes(watchedDate)
-        setTimes(resultTimes)
+        try {
+          const resultTimes = await getAppointmentTimes(watchedDate)
+          setTimes(resultTimes)
+        } catch (e) {
+          if (e instanceof AxiosError) {
+            setPageStatus('error')
+            setErrorMessage(`Error to get times:\n${e.message}`)
+          }
+        }
       }
 
       fillTimes()
     }
   }, [watchedDate])
 
-  const onSubmit: SubmitHandler<FormSchema> = async (data) => {
-    console.log('Submit')
+  const onSubmit: SubmitHandler<PokemonFormSchema> = async (data) => {
+    try {
+      await createAppointment(data)
+      setPageStatus('success')
+      setSuccessMessage(
+        `Seu agendamento para dia ${watchedDate}, às ${formatTime(
+          watchedTime,
+        )}, para ${
+          watchedPokemons.length
+        }x pokémons foi realizado com sucesso!`,
+      )
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        setPageStatus('error')
+        setErrorMessage(
+          `Error to create appointment:\n${e?.response?.statusText}`,
+        )
+      }
+    } finally {
+      reset()
+    }
   }
 
   return (
@@ -280,9 +332,7 @@ export const Scheduling = () => {
             {pageStatus === 'success' ? (
               <NoticeBox
                 title={'Consulta Agendada'}
-                text={
-                  'Seu agendamento para dia xx/xx/xxxx, às 00h00m, para 0x pokémons foi realizado com sucesso!'
-                }
+                text={successMessage}
                 imageSrc={checkIcon.src}
                 buttonLabel={'Fazer novo agendamento'}
                 onButtonClick={() => {
@@ -294,7 +344,7 @@ export const Scheduling = () => {
             {pageStatus === 'error' ? (
               <NoticeBox
                 title={'Houve um problema no agendamento'}
-                text={'Mensagem de erro'}
+                text={errorMessage}
                 imageSrc={warningIcon.src}
                 buttonLabel={'Fazer novo agendamento'}
                 onButtonClick={() => {

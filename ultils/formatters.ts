@@ -37,3 +37,8 @@ export const formatCurrencyToCents = (price: string): number => {
   }
   return +(price + '00')
 }
+
+export const formatTime = (time: string): string => {
+  const splitedTime = time.split(':')
+  return `${splitedTime[0]}h${splitedTime[1]}m`
+}
