@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components'
 import { AboutUs } from '.'
 import { light } from '../../../styles/themes/light'
 
-describe('PageSummary', () => {
+describe('AboutUs', () => {
   it('should render component correctly', () => {
     render(
       <ThemeProvider theme={light}>
