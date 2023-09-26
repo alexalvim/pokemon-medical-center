@@ -83,7 +83,7 @@ export const SelectField = ({
                 <OptionsList>
                   {options.map((option, i) => (
                     <li
-                      key={`${option}-{i}`}
+                      key={`${option}-${i}`}
                       onClick={() => handleSelectOption(option)}
                     >
                       {option}

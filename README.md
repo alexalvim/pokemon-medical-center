@@ -1,3 +1,51 @@
+# Pokemon Medical center
+
+## The project
+
+
+The application allows the user to know the Pokemon medical center and allows too the user create an apointment for his pokemon team
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `pnpm run start`
+
+Runs the application.
+
+### `pnpm run dev`
+
+Runs the application in development mode.
+
+### `pnpm run test`
+
+Run application tests.
+
+### `pnpm run test:watch`
+
+Run application tests in watch mode.
+
+### `pnpm run build`
+
+Build application.
+
+### `pnpm run lint`
+
+Run lint in the application
+
+## Step by step to run the project
+
+1. Clone the repository to your machine.
+
+2. Enter the project directory.
+
+3. Run `pnpm install` to install project dependencies.
+
+4. Run `pnpm run build` to build the application
+
+5. Run `pnpm run start` to run the aplication in `localhost:3000`.
+
+
 # PETZ
  
 Teste técnico para desenvolvimento frontend – React/NextJS.

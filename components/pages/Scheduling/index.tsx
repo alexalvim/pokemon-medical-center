@@ -150,6 +150,7 @@ export const Scheduling = () => {
     return () => {
       reset()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
